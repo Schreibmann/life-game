@@ -5,6 +5,7 @@ $border-color: #cccccc;
   width: 8px;
   height: 8px;
   border: solid 0.5px $border-color;
+  transition: all 235ms ease-in-out;
 }
 
 .cell__alive {

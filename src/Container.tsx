@@ -5,14 +5,14 @@ import Cell from "./Cell";
 import buttonStyle from "./button.module.scss";
 
 const ROWS = 50;
-const COLS = 90;
+const COLS = 50;
 
 function fpm(i: number) {
   if (i === 0) return COLS;
   else return i;
 }
 function fpp(i: number) {
-  if (i === 29) return -1;
+  if (i === 49) return -1;
   else return i;
 }
 
@@ -23,6 +23,11 @@ const Container = () => {
   const [lifeMatrix, setLifeMatrix] = React.useState<LifeMatrixType>([]);
 
   const initLifeMatrix = () => {
+    if (evolution) {
+      setEvolution(false);
+      clearInterval(timerId as NodeJS.Timeout);
+      setTimerId(null);
+    }
     const initial: LifeMatrixType = [];
     for (let row = 0; row < ROWS; row++) {
       initial[row] = [];
@@ -31,6 +36,7 @@ const Container = () => {
       }
     }
     setLifeMatrix(initial);
+    setInitialized(true);
   };
 
   const handleCellClick = ({ row, col, isAlive }: CellProps) => {
@@ -51,10 +57,10 @@ const Container = () => {
       nextGeneration[row] = [];
       for (let col = 0; col < COLS; col++) {
         let neighbors = 0;
-        if (prevGeneration[fpm(row) - 1][col] === true) neighbors++; //up
+        if (prevGeneration[row][fpm(col) - 1] === true) neighbors++; //left
         if (prevGeneration[row][fpp(col) + 1] === true) neighbors++; //right
         if (prevGeneration[fpp(row) + 1][col] === true) neighbors++; //bottom
-        if (prevGeneration[row][fpm(col) - 1] === true) neighbors++; //left
+        if (prevGeneration[fpm(row) - 1][col] === true) neighbors++; //up
         if (prevGeneration[fpm(row) - 1][fpp(col) + 1] === true) neighbors++;
         if (prevGeneration[fpp(row) + 1][fpp(col) + 1] === true) neighbors++;
         if (prevGeneration[fpp(row) + 1][fpm(col) - 1] === true) neighbors++;
@@ -80,13 +86,12 @@ const Container = () => {
   };
 
   React.useEffect(() => {
-    initLifeMatrix();
-    setInitialized(true);
+    initLifeMatrix(); 
   }, []);
 
   React.useEffect(() => {
     if (initialized && evolution) {
-      setTimeout(CalculateNextGeneration, 300);
+      setTimeout(CalculateNextGeneration, 500);
     }
   }, [CalculateNextGeneration, evolution, initialized]);
 
