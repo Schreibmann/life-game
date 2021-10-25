@@ -24,8 +24,8 @@ const Container = () => {
 
   const initLifeMatrix = () => {
     if (evolution) {
+      clearTimeout(timerId as NodeJS.Timeout);
       setEvolution(false);
-      clearInterval(timerId as NodeJS.Timeout);
       setTimerId(null);
     }
     const initial: LifeMatrixType = [];
@@ -81,7 +81,6 @@ const Container = () => {
       setTimerId(null);
     } else {
       setEvolution(true);
-      CalculateNextGeneration();
     }
   };
 
